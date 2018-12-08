@@ -1,0 +1,19 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:alpine
+#    volumes:
+#      - ./data:/var/lib/postgresql/data:rw
+
+  django:
+    build: ./
+    command: bash -c "python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ./src:/src:rw
+      - ./.env:/src/core/.env
+    restart: on-failure
+    depends_on:
+      - db
+    ports:
+      - 8000:8000

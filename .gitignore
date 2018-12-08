@@ -1,0 +1,29 @@
+.idea
+.ropeproject/
+.cache
+__pycache__
+*.sqlite3
+.coverage
+.pytest_cache
+celerybeat-schedule
+.env
+data/
+media
+.vscode
+./reports/
+./reports/*
+
+### JupyterNotebook ###
+.ipynb_checkpoints
+*/.ipynb_checkpoints/*
+
+# Remove previous ipynb_checkpoints
+#   git rm -r .ipynb_checkpoints/
+
+
+# mypy
+.mypy_cache/
+.incremental_checker_cache.json
+.cache
+dmypy.json
+.dmypy.json
