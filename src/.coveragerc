@@ -1,2 +1,2 @@
 [run]
-omit = manage.py, core/wsgi.py
+omit = manage.py, conftest.py, core/wsgi.py

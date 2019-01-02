@@ -19,11 +19,8 @@ def test_create_post_201(db, client):
     assert Post.objects.last().text == data['text']
 
 
-def test_list_posts_200(db, client):
-    title = 'LOL title'
-    text = 'LOL text'
-    Post.objects.create(title=title, text=text)
+def test_list_posts_200(db, client, post):
     response = client.get(path='/api/posts/', format='json')
     assert response.status_code == 200
-    assert response.data[0]['title'] == title
-    assert response.data[0]['text'] == text
+    assert response.data[0]['title'] == post.title
+    assert response.data[0]['text'] == post.text
