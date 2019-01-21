@@ -6,7 +6,6 @@ __pycache__
 .coverage
 .pytest_cache
 celerybeat-schedule
-.env
 data/
 media
 .vscode

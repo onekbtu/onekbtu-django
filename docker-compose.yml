@@ -3,8 +3,13 @@ version: '3'
 services:
   db:
     image: postgres:alpine
-#    volumes:
-#      - ./data:/var/lib/postgresql/data:rw
+    volumes:
+      - ./db:/var/lib/postgresql/data:rw
+    environment:
+      POSTGRES_DB: onekbtu
+      POSTGRES_USER: onekbtuadmin
+      POSTGRES_PASSWORD: UFR9Uy7EQH54p2P3bZ76
+
 
   django:
     build: ./
