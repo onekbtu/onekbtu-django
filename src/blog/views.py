@@ -7,7 +7,7 @@ from blog.serializers import PostSerializer
 class PostViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.AllowAny,)
     serializer_class = PostSerializer
-    queryset = Post.objects.all()
+    queryset = Post.objects.order_by('-id').all()
     http_method_names = ('post', 'get')
 
     class Meta:

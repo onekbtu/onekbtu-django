@@ -11,6 +11,7 @@ def test_create_post_201(db, client):
         }
     )
     response = client.post(path='/api/posts/', data=data, format='json')
+    print(response.data)
     assert response.status_code == 201
     assert response.data['title'] == data['title']
     assert response.data['content'] == data['content']
@@ -18,12 +19,12 @@ def test_create_post_201(db, client):
     post = Post.objects.last()
     assert post.title == data['title']
     assert post.content == data['content']
-    assert post.id == data['id']
+    assert post.id == response.data['id']
 
 
 def test_list_posts_200(db, client, post):
     response = client.get(path='/api/posts/', format='json')
     assert response.status_code == 200
-    assert response.data[0]['id'] == post.id
-    assert response.data[0]['content'] == post.content
-    assert response.data[0]['text'] == post.text
+    assert response.data['results'][0]['id'] == post.id
+    assert response.data['results'][0]['title'] == post.title
+    assert response.data['results'][0]['content'] == post.content
