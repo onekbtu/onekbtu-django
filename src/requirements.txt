@@ -1,6 +1,8 @@
 Django==2.1.4
+django-cors-headers==2.4.0
 django-environ==0.4.5
 djangorestframework==3.9.0
+djangorestframework-jwt==1.11.0
 flake8==3.5.0
 flake8-isort==2.6.0
 isort==4.3.4

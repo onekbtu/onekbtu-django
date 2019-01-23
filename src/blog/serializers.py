@@ -4,6 +4,8 @@ from blog.models import Post
 
 
 class PostSerializer(serializers.ModelSerializer):
+    id = serializers.ReadOnlyField()
+
     class Meta:
         model = Post
-        fields = '__all__'
+        fields = ('id', 'title', 'content')
