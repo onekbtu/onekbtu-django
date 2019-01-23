@@ -92,9 +92,11 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-DATABASES = {
-    'default': env.db()
-}
+DATABASES = MappingProxyType(
+    {
+        'default': env.db()
+    }
+)
 
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
@@ -156,8 +158,8 @@ REST_FRAMEWORK = MappingProxyType(
 
 CORS_ORIGIN_ALLOW_ALL = True
 
-CORS_ALLOW_METHODS = default_methods
+CORS_ALLOW_METHODS = MappingProxyType(default_methods)
 
-CORS_ALLOW_HEADERS = default_headers
+CORS_ALLOW_HEADERS = MappingProxyType(default_headers)
 
 CORS_ALLOW_CREDENTIALS = True
