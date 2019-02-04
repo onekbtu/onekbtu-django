@@ -1,6 +1,6 @@
 from pytest import fixture
 
-from blog.models import Post
+from ..models import Post
 
 
 @fixture

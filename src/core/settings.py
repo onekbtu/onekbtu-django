@@ -163,3 +163,8 @@ CORS_ALLOW_METHODS = default_methods
 CORS_ALLOW_HEADERS = default_headers
 
 CORS_ALLOW_CREDENTIALS = True
+
+JWT_AUTH = {
+    # Authorization:Token xxx
+    'JWT_AUTH_HEADER_PREFIX': 'Token',
+}
