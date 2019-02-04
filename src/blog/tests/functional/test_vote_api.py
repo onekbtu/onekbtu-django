@@ -1,6 +1,7 @@
+from django.contrib.auth import get_user_model
 from rest_framework.test import APITestCase
 
-from blog.models import Post, User, Vote
+from blog.models import Post, Vote
 
 
 class VoteViewTest(APITestCase):
@@ -13,12 +14,12 @@ class VoteViewTest(APITestCase):
                 'content': 'this is test post content',
             },
         )
-        self.user = User.objects.create_user('user1', 'user1@mail.ru', 'Pas$w0rd')
+        self.user = get_user_model().objects.create_user('user1', 'user1@mail.ru', 'Pas$w0rd')
         response = self.client.post('/api/auth/login/', {'username': 'user1', 'password': 'Pas$w0rd'})
         token = response.data.get('token')
-        self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
+        self.client.credentials(HTTP_AUTHORIZATION='JWT ' + token)
 
-    def test_create_vote_200(self):
+    def test_create_vote_201(self):
 
         response = self.client.post(
             path='/api/votes/',
@@ -27,7 +28,7 @@ class VoteViewTest(APITestCase):
                 'type': 1,
             },
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
         self.assertTrue(Vote.objects.exists())
 
     def test_create_vote_invalid_post_400(self):
@@ -42,7 +43,7 @@ class VoteViewTest(APITestCase):
         )
         self.assertEqual(response.status_code, 400)
 
-    def test_create_vote_invalid_type_405(self):
+    def test_create_vote_invalid_type_400(self):
         response = self.client.post(
             path='/api/votes/',
             data={
@@ -51,9 +52,9 @@ class VoteViewTest(APITestCase):
             },
             format='json',
         )
-        self.assertEqual(response.status_code, 405)
+        self.assertEqual(response.status_code, 400)
 
-    def test_post_rating(self):
+    def test_post_rating_201(self):
 
         response = self.client.post(
             path='/api/votes/',
@@ -64,7 +65,7 @@ class VoteViewTest(APITestCase):
             format='json',
         )
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
         self.assertEqual(response.data.get('rating'), 1)
 
         response = self.client.post(
@@ -76,8 +77,8 @@ class VoteViewTest(APITestCase):
             format='json',
         )
 
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(response.data.get('rating'), -1)
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data.get('rating'), -1)
 
         post = Post.objects.get(pk=6)
-        self.assertEquals(post.rating, -1)
+        self.assertEqual(post.rating, -1)
