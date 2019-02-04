@@ -1,21 +1,24 @@
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from django.db import models
 
 
 class Post(models.Model):
     title = models.CharField(max_length=32)
     content = models.TextField(max_length=2000)
-    rating = models.IntegerField(default=0)
+
+    @property
+    def rating(self):
+        qs = self.votes.all().aggregate(rating=models.Sum('type'))
+        return qs['rating']
 
 
 class Vote(models.Model):
-    post = models.ForeignKey(Post, related_name='likes', on_delete=models.CASCADE)
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, related_name='votes', on_delete=models.CASCADE)
+    user = models.ForeignKey(to=get_user_model(), on_delete=models.CASCADE)
 
-    type = models.IntegerField(choices=(
-        (1, 'like'),
-        (-1, 'dislike'),
-    ))
-
-    class Meta:
-        unique_together = ('post', 'user')
+    type = models.IntegerField(
+        choices=(
+            (1, 'like'),
+            (-1, 'dislike'),
+        )
+    )
