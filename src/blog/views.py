@@ -16,7 +16,6 @@ class PostViewSet(viewsets.ModelViewSet):
 
 
 class VoteViewSet(viewsets.ModelViewSet):
-
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = VoteSerializer
     http_method_names = ('post',)
@@ -25,33 +24,10 @@ class VoteViewSet(viewsets.ModelViewSet):
         model = Vote
 
     def create(self, request, *args, **kwargs):
-        user = request.user
-        try:
-            type = int(request.data.get('type'))
-            post_pk = int(request.data.get('post'))
-            if type != -1 and type != 1:
-                return Response({
-                    'errors': [
-                        'Vote type must be either 1 or -1'
-                    ]},
-                    status=status.HTTP_405_METHOD_NOT_ALLOWED,
-                )
-            post = Post.objects.get(pk=post_pk)
-            vote = Vote.objects.filter(post=post, user=user)
-
-            if not len(vote):
-                vote = Vote.objects.create(post=post, user=user, type=type)
-            else:
-                vote = vote[0]
-                post.rating -= vote.type
-                vote.type = type
-
-            post.rating += vote.type
-
-            post.save()
-            vote.save()
-
-            return Response({'rating': post.rating}, status=status.HTTP_200_OK)
-        except Exception as e:
-            print(e)
-            return Response({}, status=status.HTTP_400_BAD_REQUEST)
+        data = request.data
+        data['user'] = request.user.id
+        serializer = self.get_serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)

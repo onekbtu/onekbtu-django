@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from pytest import fixture
 
 from ..models import Post
