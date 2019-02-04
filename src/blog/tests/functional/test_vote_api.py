@@ -66,7 +66,6 @@ class VoteViewTest(APITestCase):
         )
 
         self.assertEqual(response.status_code, 201)
-        print(response.data)
         self.assertEqual(response.data.get('rating'), 1)
 
         response = self.client.post(
@@ -79,7 +78,6 @@ class VoteViewTest(APITestCase):
         )
 
         self.assertEqual(response.status_code, 201)
-        print(response.data)
         self.assertEqual(response.data.get('rating'), -1)
 
         post = Post.objects.get(pk=6)
