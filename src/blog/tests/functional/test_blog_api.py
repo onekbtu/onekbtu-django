@@ -1,6 +1,7 @@
 from types import MappingProxyType
 
 from bleach import clean
+from bleach_whitelist import markdown_attrs, markdown_tags
 from rest_framework.exceptions import ErrorDetail
 
 from blog.models import Post, Vote
@@ -35,11 +36,19 @@ def test_create_post_sanitize(db, client):
     response = client.post(path='/api/posts/', data=data, format='json')
     assert response.status_code == 201
     assert response.data['title'] == data['title']
-    assert response.data['content'] == clean(data['content'])
+    assert response.data['content'] == clean(
+        data['content'],
+        tags=markdown_tags,
+        attributes=markdown_attrs,
+    )
     assert Post.objects.count() == 1
     post = Post.objects.last()
     assert post.title == data['title']
-    assert post.content == clean(data['content'])
+    assert post.content == clean(
+        data['content'],
+        tags=markdown_tags,
+        attributes=markdown_attrs,
+    )
     assert post.id == response.data['id']
 
 
