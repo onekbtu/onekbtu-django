@@ -17,7 +17,6 @@ services:
     volumes:
       - ./src:/src:rw
       - ./.env:/src/core/.env
-    restart: on-failure
     depends_on:
       - db
     ports:

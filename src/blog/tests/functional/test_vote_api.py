@@ -14,8 +14,14 @@ class VoteViewTest(APITestCase):
                 'content': 'this is test post content',
             },
         )
-        self.user = get_user_model().objects.create_user('user1', 'user1@mail.ru', 'Pas$w0rd')
-        response = self.client.post('/api/auth/login/', {'username': 'user1', 'password': 'Pas$w0rd'})
+        self.user = get_user_model().objects.create_user(username='user1', password='Pas$w0rd')
+        response = self.client.post(
+            '/api/auth/login/',
+            {
+                'username': 'user1',
+                'password': 'Pas$w0rd'
+            }
+        )
         token = response.data.get('token')
         self.client.credentials(HTTP_AUTHORIZATION='JWT ' + token)
 

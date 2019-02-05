@@ -10,6 +10,5 @@ class UserFactory(DjangoModelFactory):
     def create_user(cls):
         return User.objects.create_user(
             username='muslimbeibytuly',
-            email='muslimbeibytuly@gmail.com',
             password='Qwerty123'
         )
