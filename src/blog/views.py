@@ -1,5 +1,3 @@
-from copy import deepcopy
-
 from rest_framework import permissions, status, viewsets
 from rest_framework.response import Response
 
@@ -20,16 +18,22 @@ class PostViewSet(viewsets.ModelViewSet):
 class VoteViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = VoteSerializer
+    queryset = Vote.objects.order_by('-id').all()
     http_method_names = ('post',)
 
     class Meta:
         model = Vote
 
     def create(self, request, *args, **kwargs):
-        data = deepcopy(request.data)
-        data['user'] = request.user.id
-        serializer = self.get_serializer(data=data)
+        serializer = self.get_serializer(
+            data=request.data,
+            context={'request': request}
+        )
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+            headers=headers
+        )

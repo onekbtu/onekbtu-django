@@ -166,6 +166,6 @@ CORS_ALLOW_CREDENTIALS = True
 
 JWT_AUTH = MappingProxyType(
     {
-        'JWT_AUTH_HEADER_PREFIX': 'Token',
+        'JWT_AUTH_HEADER_PREFIX': 'JWT',
     }
 )

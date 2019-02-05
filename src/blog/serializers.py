@@ -15,6 +15,10 @@ class PostSerializer(serializers.ModelSerializer):
 class VoteSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
     type = serializers.IntegerField(required=True)
+    user = serializers.HiddenField(
+        write_only=True,
+        default=serializers.CurrentUserDefault()
+    )
 
     class Meta:
         model = Vote

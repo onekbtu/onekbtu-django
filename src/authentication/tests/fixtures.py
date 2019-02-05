@@ -19,6 +19,6 @@ def client_with_token(client):
     token = response.data['token']
     authenticated_client = APIClient()
     authenticated_client.credentials(
-        HTTP_AUTHORIZATION='Token {}'.format(token)
+        HTTP_AUTHORIZATION='JWT {}'.format(token)
     )
     return authenticated_client
