@@ -16,7 +16,6 @@ class PostViewSet(viewsets.ModelViewSet):
 
 
 class VoteViewSet(viewsets.ModelViewSet):
-
     permission_classes = (permissions.IsAuthenticated,)
     serializer_class = VoteSerializer
     queryset = Vote.objects.order_by('-id').all()
@@ -26,13 +25,15 @@ class VoteViewSet(viewsets.ModelViewSet):
         model = Vote
 
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.get_serializer(
+            data=request.data,
+            context={'request': request}
+        )
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         headers = self.get_success_headers(serializer.data)
-        post = Post.objects.get(pk=serializer.data['post'])
         return Response(
-            {'rating': post.rating},
+            serializer.data,
             status=status.HTTP_201_CREATED,
-            headers=headers,
+            headers=headers
         )

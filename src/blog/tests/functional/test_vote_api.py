@@ -20,11 +20,10 @@ class VoteViewTest(APITestCase):
         self.client.credentials(HTTP_AUTHORIZATION='JWT ' + token)
 
     def test_create_vote_201(self):
-
         response = self.client.post(
             path='/api/votes/',
             data={
-                'post': 3,
+                'post': 1,
                 'type': 1,
             },
         )
@@ -32,7 +31,6 @@ class VoteViewTest(APITestCase):
         self.assertTrue(Vote.objects.exists())
 
     def test_create_vote_invalid_post_400(self):
-
         response = self.client.post(
             path='/api/votes/',
             data={
@@ -55,30 +53,28 @@ class VoteViewTest(APITestCase):
         self.assertEqual(response.status_code, 400)
 
     def test_post_rating_201(self):
-
         response = self.client.post(
             path='/api/votes/',
             data={
-                'post': 6,
+                'post': Post.objects.last().id,
                 'type': 1,
             },
             format='json',
         )
-
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(response.data.get('rating'), 1)
+
+        post = Post.objects.last()
+        self.assertEqual(post.rating, 1)
 
         response = self.client.post(
             path='/api/votes/',
             data={
-                'post': 6,
+                'post': Post.objects.last().id,
                 'type': -1,
             },
             format='json',
         )
-
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(response.data.get('rating'), -1)
 
-        post = Post.objects.get(pk=6)
-        self.assertEqual(post.rating, -1)
+        post = Post.objects.last()
+        self.assertEqual(post.rating, 0)

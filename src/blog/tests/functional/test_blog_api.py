@@ -1,6 +1,8 @@
 from types import MappingProxyType
 
-from blog.models import Post
+from rest_framework.exceptions import ErrorDetail
+
+from blog.models import Post, Vote
 
 
 def test_create_post_201(db, client):
@@ -11,7 +13,6 @@ def test_create_post_201(db, client):
         }
     )
     response = client.post(path='/api/posts/', data=data, format='json')
-    print(response.data)
     assert response.status_code == 201
     assert response.data['title'] == data['title']
     assert response.data['content'] == data['content']
@@ -28,3 +29,35 @@ def test_list_posts_200(db, client, post):
     assert response.data['results'][0]['id'] == post.id
     assert response.data['results'][0]['title'] == post.title
     assert response.data['results'][0]['content'] == post.content
+
+
+def test_create_vote_201(db, client_with_token, post):
+    data = MappingProxyType(
+        {
+            'post': post.id,
+            'type': 1
+        }
+    )
+    assert Post.objects.last().rating == 0
+    response = client_with_token.post(path='/api/votes/', data=data, format='json')
+    assert response.status_code == 201
+    assert response.data == {
+        'id': 1,
+        'post': Post.objects.last().id,
+        'type': 1
+    }
+    assert Vote.objects.count() == 1
+    assert Post.objects.count() == 1
+    assert Post.objects.last().rating == 1
+
+
+def test_create_vote_400_incorrect_type(db, client_with_token, post):
+    data = MappingProxyType(
+        {
+            'post': post.id,
+            'type': 2
+        }
+    )
+    response = client_with_token.post(path='/api/votes/', data=data, format='json')
+    assert response.status_code == 400
+    assert response.data['type'] == [ErrorDetail(string='Invalid vote type', code='invalid')]
