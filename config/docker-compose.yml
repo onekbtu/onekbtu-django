@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:alpine
+    volumes:
+      - ./db:/var/lib/postgresql/data:rw
+    environment:
+      POSTGRES_DB: onekbtu
+      POSTGRES_USER: onekbtuadmin
+      POSTGRES_PASSWORD: UFR9Uy7EQH54p2P3bZ76
+
+  vue:
+    image: muslimbeibytuly/onekbtu-vue:master
+    entrypoint: cp -r /frontend/dist/ /
+    volumes:
+      - vue:/dist
+
+  django:
+    image: muslimbeibytuly/onekbtu-django:master
+    command: bash -c "python manage.py collectstatic --noinput && python manage.py migrate && gunicorn -c gunicorn.conf core.wsgi"
+      - ./.env_django:/src/core/.env
+      - ./gunicorn.conf:/src/gunicorn.conf
+      - ./logs:/logs
+      - static:/src/staticfiles
+    depends_on:
+      - db
+    ports:
+      - 8000:8000
+
+  nginx:
+    image: nginx
+    command: "/bin/sh -c 'while :; do sleep 720h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    depends_on:
+      - django
+    environment:
+      - TZ=Asia/Almaty
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./dh-param/dhparam-2048.pem:/etc/ssl/certs/dhparam-2048.pem
+      - /docker-volumes/etc/letsencrypt/:/etc/letsencrypt
+      - /docker-volumes/data/letsencrypt:/data/letsencrypt
+      - ./logs:/logs
+      - static:/static
+      - ./media:/media
+      - vue:/vue
+    ports:
+      - "80:80"
+      - "443:443"
+
+  certbot:
+    image: certbot/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+
+volumes:
+  static:

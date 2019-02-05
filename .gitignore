@@ -6,7 +6,7 @@ __pycache__
 .coverage
 .pytest_cache
 celerybeat-schedule
-data/
+db/
 media
 .vscode
 ./reports/
