@@ -23,10 +23,11 @@ class VoteViewTest(APITestCase):
         response = self.client.post(
             path='/api/votes/',
             data={
-                'post': 1,
+                'post': Post.objects.last().id,
                 'type': 1,
             },
         )
+        print(response)
         self.assertEqual(response.status_code, 201)
         self.assertTrue(Vote.objects.exists())
 

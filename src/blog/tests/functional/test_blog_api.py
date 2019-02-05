@@ -1,5 +1,6 @@
 from types import MappingProxyType
 
+from bleach import clean
 from rest_framework.exceptions import ErrorDetail
 
 from blog.models import Post, Vote
@@ -20,6 +21,25 @@ def test_create_post_201(db, client):
     post = Post.objects.last()
     assert post.title == data['title']
     assert post.content == data['content']
+    assert post.id == response.data['id']
+
+
+def test_create_post_sanitize(db, client):
+    data = MappingProxyType(
+        {
+            'title': 'This is TDD',
+            'content': 'Hello from xss :D <script>alert("hi")</script>',
+        }
+    )
+
+    response = client.post(path='/api/posts/', data=data, format='json')
+    assert response.status_code == 201
+    assert response.data['title'] == data['title']
+    assert response.data['content'] == clean(data['content'])
+    assert Post.objects.count() == 1
+    post = Post.objects.last()
+    assert post.title == data['title']
+    assert post.content == clean(data['content'])
     assert post.id == response.data['id']
 
 
