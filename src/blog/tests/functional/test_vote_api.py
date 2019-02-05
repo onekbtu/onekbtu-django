@@ -1,6 +1,7 @@
+from django.contrib.auth.models import User
 from rest_framework.test import APITestCase
 
-from blog.models import Post, User, Vote
+from blog.models import Post, Vote
 
 
 class VoteViewTest(APITestCase):
@@ -18,20 +19,18 @@ class VoteViewTest(APITestCase):
         token = response.data.get('token')
         self.client.credentials(HTTP_AUTHORIZATION='Token ' + token)
 
-    def test_create_vote_200(self):
-
+    def test_create_vote_201(self):
         response = self.client.post(
             path='/api/votes/',
             data={
-                'post': 3,
+                'post': 1,
                 'type': 1,
             },
         )
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 201)
         self.assertTrue(Vote.objects.exists())
 
     def test_create_vote_invalid_post_400(self):
-
         response = self.client.post(
             path='/api/votes/',
             data={
@@ -42,7 +41,7 @@ class VoteViewTest(APITestCase):
         )
         self.assertEqual(response.status_code, 400)
 
-    def test_create_vote_invalid_type_405(self):
+    def test_create_vote_invalid_type_400(self):
         response = self.client.post(
             path='/api/votes/',
             data={
@@ -51,33 +50,32 @@ class VoteViewTest(APITestCase):
             },
             format='json',
         )
-        self.assertEqual(response.status_code, 405)
+        self.assertEqual(response.status_code, 400)
 
     def test_post_rating(self):
-
         response = self.client.post(
             path='/api/votes/',
             data={
-                'post': 6,
+                'post': 1,
                 'type': 1,
             },
             format='json',
         )
+        self.assertEqual(response.status_code, 201)
 
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response.data.get('rating'), 1)
+        post = Post.objects.get(pk=1)
+        self.assertEqual(post.rating, 1)
 
         response = self.client.post(
             path='/api/votes/',
             data={
-                'post': 6,
+                'post': 1,
                 'type': -1,
             },
             format='json',
         )
+        print(response.content)
+        self.assertEqual(response.status_code, 201)
 
-        self.assertEquals(response.status_code, 200)
-        self.assertEquals(response.data.get('rating'), -1)
-
-        post = Post.objects.get(pk=6)
-        self.assertEquals(post.rating, -1)
+        post = Post.objects.get(pk=1)
+        self.assertEqual(post.rating, 0)

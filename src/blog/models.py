@@ -25,7 +25,7 @@ class Vote(models.Model):
 
 
 @receiver(post_save, sender=Vote)
-def notify_on_partnership_save(sender, instance: Vote, created, **kwargs):
+def post_save_vote(sender, instance: Vote, created, **kwargs):
     if created:
         post = instance.post
         post.rating += instance.type

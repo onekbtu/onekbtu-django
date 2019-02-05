@@ -42,8 +42,10 @@ def test_create_vote_201(db, client_with_token, post):
     assert response.status_code == 201
     assert response.data == {
         'id': 1,
-        'post': 1,
-        'user': 1,
+        'post': Post.objects.last().id,
+        'user': User.objects.last().id,
         'type': 1
     }
     assert Vote.objects.count() == 1
+    assert Post.objects.count() == 1
+    assert Post.objects.last().rating == 1

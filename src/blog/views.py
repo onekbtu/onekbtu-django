@@ -1,3 +1,5 @@
+from copy import deepcopy
+
 from rest_framework import permissions, status, viewsets
 from rest_framework.response import Response
 
@@ -24,7 +26,7 @@ class VoteViewSet(viewsets.ModelViewSet):
         model = Vote
 
     def create(self, request, *args, **kwargs):
-        data = request.data
+        data = deepcopy(request.data)
         data['user'] = request.user.id
         serializer = self.get_serializer(data=data)
         serializer.is_valid(raise_exception=True)
