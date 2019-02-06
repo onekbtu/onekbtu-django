@@ -33,5 +33,4 @@ class VoteSerializer(serializers.ModelSerializer):
         vote, created = Vote.objects.get_or_create(**validated_data)
         if not created:
             vote.delete()
-            return vote
         return vote
