@@ -32,7 +32,7 @@ def test_list_posts_200(db, client, post):
     assert response.data['results'][0]['content'] == post.content
 
 
-def test_create_vote_201(db, client_with_token, post):
+def test_like_201(db, client_with_token, post):
     data = MappingProxyType(
         {
             'post': post.id,
@@ -71,6 +71,27 @@ def test_delete_vote_201(db, client_with_token, post):
     }
     assert Vote.objects.count() == 0
     assert Post.objects.last().rating == 0
+
+
+def test_dislike_201(db, client_with_token, post):
+    Vote.objects.create(user=get_user_model().objects.last(), post=post, type=1)
+    assert Vote.objects.count() == 1
+    assert Post.objects.last().rating == 1
+    data = MappingProxyType(
+        {
+            'post': post.id,
+            'type': -1
+        }
+    )
+    response = client_with_token.post(path='/api/votes/', data=data, format='json')
+    assert response.status_code == 201
+    # assert response.data == {
+    #     'id': None,
+    #     'post': post.id,
+    #     'type': 1
+    # }
+    assert Vote.objects.count() == 1
+    assert Post.objects.last().rating == -1
 
 
 def test_create_vote_400_incorrect_type(db, client_with_token, post):

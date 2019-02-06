@@ -33,4 +33,9 @@ class VoteSerializer(serializers.ModelSerializer):
         vote, created = Vote.objects.get_or_create(**validated_data)
         if not created:
             vote.delete()
+        else:
+            Vote.objects.filter(
+                post=validated_data['post'],
+                user=validated_data['user']
+            ).exclude(id=vote.id).delete()
         return vote

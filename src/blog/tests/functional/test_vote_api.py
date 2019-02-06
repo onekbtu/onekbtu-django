@@ -79,4 +79,4 @@ class VoteViewTest(APITestCase):
             format='json'
         )
         self.assertEqual(response.status_code, 201)
-        self.assertEqual(Post.objects.last().rating, 0)
+        self.assertEqual(Post.objects.last().rating, -1)
