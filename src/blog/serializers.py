@@ -28,3 +28,10 @@ class VoteSerializer(serializers.ModelSerializer):
         if type not in (-1, 1):
             raise serializers.ValidationError('Invalid vote type')
         return type
+
+    def create(self, validated_data):
+        vote, created = Vote.objects.get_or_create(**validated_data)
+        if not created:
+            vote.delete()
+            return vote
+        return vote

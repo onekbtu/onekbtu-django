@@ -19,5 +19,5 @@ class Vote(models.Model):
     )
 
     post = models.ForeignKey('blog.Post', related_name='votes', on_delete=models.CASCADE)
-    user = models.ForeignKey(to=get_user_model(), on_delete=models.CASCADE)
+    user = models.ForeignKey(to=get_user_model(), related_name='votes', on_delete=models.CASCADE)
     type = models.IntegerField(choices=TYPE_CHOICES)

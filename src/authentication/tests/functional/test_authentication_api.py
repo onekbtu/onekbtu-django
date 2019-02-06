@@ -1,6 +1,6 @@
 from types import MappingProxyType
 
-from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 
 
 def test_register_201(db, client):
@@ -19,8 +19,8 @@ def test_register_201(db, client):
             'email': 'muslimbeibytuly@gmail.com'
         }
     )
-    assert User.objects.count() == 1
-    user = User.objects.last()
+    assert get_user_model().objects.count() == 1
+    user = get_user_model().objects.last()
     assert user.username == 'muslimbeibytuly'
     assert user.email == 'muslimbeibytuly@gmail.com'
 

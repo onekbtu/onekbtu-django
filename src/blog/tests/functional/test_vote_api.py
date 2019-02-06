@@ -11,7 +11,7 @@ class VoteViewTest(APITestCase):
             path='/api/posts/',
             data={
                 'title': 'this is test post',
-                'content': 'this is test post content',
+                'content': 'this is test post content'
             },
         )
         self.user = get_user_model().objects.create_user(username='user1', password='Pas$w0rd')
@@ -29,8 +29,8 @@ class VoteViewTest(APITestCase):
         response = self.client.post(
             path='/api/votes/',
             data={
-                'post': 1,
-                'type': 1,
+                'post': Post.objects.last().id,
+                'type': 1
             },
         )
         self.assertEqual(response.status_code, 201)
@@ -54,7 +54,7 @@ class VoteViewTest(APITestCase):
                 'post': 5,
                 'type': 2,
             },
-            format='json',
+            format='json'
         )
         self.assertEqual(response.status_code, 400)
 
@@ -63,24 +63,20 @@ class VoteViewTest(APITestCase):
             path='/api/votes/',
             data={
                 'post': Post.objects.last().id,
-                'type': 1,
+                'type': 1
             },
-            format='json',
+            format='json'
         )
         self.assertEqual(response.status_code, 201)
-
-        post = Post.objects.last()
-        self.assertEqual(post.rating, 1)
+        self.assertEqual(Post.objects.last().rating, 1)
 
         response = self.client.post(
             path='/api/votes/',
             data={
                 'post': Post.objects.last().id,
-                'type': -1,
+                'type': -1
             },
-            format='json',
+            format='json'
         )
         self.assertEqual(response.status_code, 201)
-
-        post = Post.objects.last()
-        self.assertEqual(post.rating, 0)
+        self.assertEqual(Post.objects.last().rating, 0)
