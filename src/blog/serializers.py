@@ -1,7 +1,7 @@
 from bleach import clean
-from bleach_whitelist import markdown_attrs, markdown_tags
 from rest_framework import serializers
 
+from blog.constants import MARKDOWN_ATTRS, MARKDOWN_TAGS
 from blog.models import Post, Vote
 
 
@@ -16,8 +16,8 @@ class PostSerializer(serializers.ModelSerializer):
     def validate_content(self, content):
         content = clean(
             content,
-            tags=markdown_tags,
-            attributes=markdown_attrs,
+            tags=MARKDOWN_TAGS,
+            attributes=MARKDOWN_ATTRS,
         )
         return content
 
