@@ -24,7 +24,7 @@ class VoteViewSet(viewsets.ModelViewSet):
     class Meta:
         model = Vote
 
-    def create(self, request, *args, **kwargs):
+    def create(self, request, *args, **kwargs) -> Response:
         serializer = self.get_serializer(
             data=request.data,
             context={'request': request}

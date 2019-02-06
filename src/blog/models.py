@@ -15,7 +15,7 @@ class Post(models.Model):
 class Vote(models.Model):
     TYPE_CHOICES = (
         (1, 'like'),
-        (-1, 'dislike'),
+        (-1, 'dislike')
     )
 
     post = models.ForeignKey('blog.Post', related_name='votes', on_delete=models.CASCADE)
