@@ -8,10 +8,11 @@ from blog.models import Post, Vote
 class PostSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
     rating = serializers.IntegerField(read_only=True)
+    vote = serializers.SerializerMethodField()
 
     class Meta:
         model = Post
-        fields = ('id', 'title', 'content', 'rating',)
+        fields = ('id', 'title', 'content', 'rating', 'vote',)
 
     def validate_content(self, content):
         content = clean(
@@ -20,6 +21,15 @@ class PostSerializer(serializers.ModelSerializer):
             attributes=MARKDOWN_ATTRS,
         )
         return content
+
+    def get_vote(self, post):
+        user = self.context['request'].user
+        if not user or not user.is_authenticated:
+            return 0
+        vote = Vote.objects.filter(user=user, post=post)
+        if len(vote) > 0:
+            return vote[len(vote)-1].type
+        return 0
 
 
 class VoteSerializer(serializers.ModelSerializer):

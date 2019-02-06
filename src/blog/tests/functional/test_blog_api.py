@@ -1,4 +1,5 @@
 from types import MappingProxyType
+from urllib.parse import urljoin
 
 from rest_framework.exceptions import ErrorDetail
 
@@ -80,3 +81,25 @@ def test_create_vote_400_incorrect_type(db, client_with_token, post):
     response = client_with_token.post(path='/api/votes/', data=data, format='json')
     assert response.status_code == 400
     assert response.data['type'] == [ErrorDetail(string='Invalid vote type', code='invalid')]
+
+
+def test_post_vote_200(db, client_with_token, post):
+    data = MappingProxyType(
+        {
+            'post': post.id,
+            'type': 1
+        }
+    )
+    response = client_with_token.post(path='/api/votes/', data=data, format='json')
+    assert response.status_code == 201
+    response = client_with_token.get(path=urljoin('/api/posts/', str(post.id)) + '/')
+    assert response.data['rating'] == 1
+    assert response.data['vote'] == 1
+    assert response.data['id'] == post.id
+
+
+def test_post_vote_without_vote_200(db, client_with_token, post):
+    response = client_with_token.get(path=urljoin('/api/posts/', str(post.id)) + '/')
+    assert response.data['rating'] == 0
+    assert response.data['vote'] == 0
+    assert response.data['id'] == post.id
