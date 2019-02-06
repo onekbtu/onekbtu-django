@@ -5,11 +5,20 @@ from blog.models import Post, Vote
 
 class PostSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
-    rating = serializers.IntegerField(read_only=True)
+    rating = serializers.ReadOnlyField()
+    vote = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = Post
-        fields = ('id', 'title', 'content', 'rating',)
+        fields = ('id', 'title', 'content', 'rating', 'vote')
+
+    def get_vote(self, post):
+        user = self.context['request'].user
+        return getattr(
+            Vote.objects.filter(post=post, user=user).last(),
+            'type',
+            0
+        ) if user.is_authenticated else 0
 
 
 class VoteSerializer(serializers.ModelSerializer):

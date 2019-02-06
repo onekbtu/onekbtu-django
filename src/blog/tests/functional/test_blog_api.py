@@ -30,6 +30,8 @@ def test_list_posts_200(db, client, post):
     assert response.data['results'][0]['id'] == post.id
     assert response.data['results'][0]['title'] == post.title
     assert response.data['results'][0]['content'] == post.content
+    assert response.data['results'][0]['rating'] == 0
+    assert response.data['results'][0]['vote'] == 0
 
 
 def test_like_201(db, client_with_token, post):
@@ -85,11 +87,11 @@ def test_dislike_201(db, client_with_token, post):
     )
     response = client_with_token.post(path='/api/votes/', data=data, format='json')
     assert response.status_code == 201
-    # assert response.data == {
-    #     'id': None,
-    #     'post': post.id,
-    #     'type': 1
-    # }
+    assert response.data == {
+        'id': Vote.objects.last().id,
+        'post': post.id,
+        'type': -1
+    }
     assert Vote.objects.count() == 1
     assert Post.objects.last().rating == -1
 

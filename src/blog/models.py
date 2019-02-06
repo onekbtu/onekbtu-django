@@ -7,7 +7,7 @@ class Post(models.Model):
     content = models.TextField(max_length=2048)
 
     @property
-    def rating(self):
+    def rating(self) -> int:
         qs = self.votes.all().aggregate(rating=models.Sum('type'))
         return qs['rating'] or 0
 
