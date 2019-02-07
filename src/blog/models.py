@@ -8,16 +8,16 @@ class Post(models.Model):
 
     @property
     def rating(self) -> int:
-        qs = self.votes.all().aggregate(rating=models.Sum('type'))
+        qs = self.votes.all().aggregate(rating=models.Sum('vote_value'))
         return qs['rating'] or 0
 
 
 class Vote(models.Model):
-    TYPE_CHOICES = (
+    VOTE_CHOICES = (
         (1, 'like'),
         (-1, 'dislike')
     )
 
     post = models.ForeignKey('blog.Post', related_name='votes', on_delete=models.CASCADE)
     user = models.ForeignKey(to=get_user_model(), related_name='votes', on_delete=models.CASCADE)
-    type = models.IntegerField(choices=TYPE_CHOICES)
+    vote_value = models.IntegerField(choices=VOTE_CHOICES)

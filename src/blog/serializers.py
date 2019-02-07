@@ -1,5 +1,7 @@
+from bleach import clean
 from rest_framework import serializers
 
+from blog.constants import MARKDOWN_ATTRS, MARKDOWN_TAGS
 from blog.models import Post, Vote
 
 
@@ -12,18 +14,26 @@ class PostSerializer(serializers.ModelSerializer):
         model = Post
         fields = ('id', 'title', 'content', 'rating', 'vote')
 
+    def validate_content(self, content):
+        content = clean(
+            content,
+            tags=MARKDOWN_TAGS,
+            attributes=MARKDOWN_ATTRS,
+        )
+        return content
+
     def get_vote(self, post) -> int:
         user = self.context['request'].user
         return getattr(
             Vote.objects.filter(post=post, user=user).last(),
-            'type',
+            'vote_value',
             0
         ) if user.is_authenticated else 0
 
 
 class VoteSerializer(serializers.ModelSerializer):
     id = serializers.ReadOnlyField()
-    type = serializers.IntegerField(required=True)
+    vote_value = serializers.IntegerField(required=True)
     user = serializers.HiddenField(
         write_only=True,
         default=serializers.CurrentUserDefault()
@@ -31,11 +41,11 @@ class VoteSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Vote
-        fields = ('id', 'post', 'user', 'type')
+        fields = ('id', 'post', 'user', 'vote_value')
 
-    def validate_type(self, value: int) -> int:
+    def validate_vote_value(self, value: int) -> int:
         if value not in (-1, 1):
-            raise serializers.ValidationError('Invalid vote type')
+            raise serializers.ValidationError('Invalid vote vote_value')
         return value
 
     def create(self, validated_data) -> Vote:
