@@ -30,7 +30,7 @@ class VoteViewTest(APITestCase):
             path='/api/votes/',
             data={
                 'post': Post.objects.last().id,
-                'type': 1
+                'vote_value': 1
             },
         )
         self.assertEqual(response.status_code, 201)
@@ -41,18 +41,18 @@ class VoteViewTest(APITestCase):
             path='/api/votes/',
             data={
                 'post': 'asdas',
-                'type': '2',
+                'vote_value': '2',
             },
             format='json',
         )
         self.assertEqual(response.status_code, 400)
 
-    def test_create_vote_invalid_type_400(self):
+    def test_create_vote_invalid_vote_value_400(self):
         response = self.client.post(
             path='/api/votes/',
             data={
                 'post': 5,
-                'type': 2,
+                'vote_value': 2,
             },
             format='json'
         )
@@ -63,7 +63,7 @@ class VoteViewTest(APITestCase):
             path='/api/votes/',
             data={
                 'post': Post.objects.last().id,
-                'type': 1
+                'vote_value': 1
             },
             format='json'
         )
@@ -74,7 +74,7 @@ class VoteViewTest(APITestCase):
             path='/api/votes/',
             data={
                 'post': Post.objects.last().id,
-                'type': -1
+                'vote_value': -1
             },
             format='json'
         )
