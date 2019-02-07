@@ -184,6 +184,8 @@ JWT_AUTH = MappingProxyType(
         'JWT_RESPONSE_PAYLOAD_HANDLER': 'rest_framework_jwt.utils.jwt_response_payload_handler',
 
         'JWT_ALLOW_REFRESH': False,
+        
+        'JWT_EXPIRATION_DELTA': timedelta(weeks=5215),
 
         'JWT_REFRESH_EXPIRATION_DELTA': timedelta(weeks=5215)
     }
