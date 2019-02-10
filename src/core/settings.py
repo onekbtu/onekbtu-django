@@ -82,7 +82,7 @@ TEMPLATES = (
                         'django.template.context_processors.request',
                         'django.contrib.auth.context_processors.auth',
                         'django.contrib.messages.context_processors.messages',
-                    ),
+                    )
                 }
             ),
         }
@@ -106,22 +106,22 @@ DATABASES = MappingProxyType(
 AUTH_PASSWORD_VALIDATORS = (
     MappingProxyType(
         {
-            'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
+            'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'
         }
     ),
     MappingProxyType(
         {
-            'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+            'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'
         }
     ),
     MappingProxyType(
         {
-            'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
+            'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator'
         }
     ),
     MappingProxyType(
         {
-            'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
+            'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'
         }
     ),
 )
@@ -154,7 +154,7 @@ REST_FRAMEWORK = MappingProxyType(
             'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
         ),
         'DEFAULT_PERMISSION_CLASSES': (
-            'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+            'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly',
         ),
         'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
         'PAGE_SIZE': 20
@@ -184,7 +184,7 @@ JWT_AUTH = MappingProxyType(
         'JWT_RESPONSE_PAYLOAD_HANDLER': 'rest_framework_jwt.utils.jwt_response_payload_handler',
 
         'JWT_ALLOW_REFRESH': False,
-        
+
         'JWT_EXPIRATION_DELTA': timedelta(weeks=5215),
 
         'JWT_REFRESH_EXPIRATION_DELTA': timedelta(weeks=5215)

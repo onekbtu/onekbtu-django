@@ -124,4 +124,10 @@ def test_create_vote_400_incorrect_vote_value(db, client_with_token, post):
     )
     response = client_with_token.post(path='/api/votes/', data=data, format='json')
     assert response.status_code == 400
-    assert response.data['vote_value'] == [ErrorDetail(string='Invalid vote vote_value', code='invalid')]
+    assert tuple(
+        response.data['vote_value']
+    ) == (
+               ErrorDetail(
+                   string='Invalid vote vote_value', code='invalid'
+               ),
+           )
