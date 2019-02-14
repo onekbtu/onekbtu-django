@@ -11,7 +11,7 @@ services:
   django:
     image: muslimbeibytuly/onekbtu-django:${TRAVIS_BRANCH}
     command: bash -c "pytest -v --cov . --cov-report term-missing --cov-fail-under=100 --flake8"
-      - ./.env_test:/src/core/.env
+      - ./.test_env:/src/core/.env
     environment:
       DJANGO_SETTINGS_MODULE: core.settings
     depends_on:
