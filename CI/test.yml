@@ -1,0 +1,18 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:alpine
+    environment:
+      POSTGRES_DB: onekbtu
+      POSTGRES_USER: onekbtu-admin
+      POSTGRES_PASSWORD: #dHQN[Q;Yr9c"m.gwuJ2p.@8sF&UCF56
+
+  django:
+    image: muslimbeibytuly/onekbtu-django:${TRAVIS_BRANCH}
+    command: bash -c "pytest -v --cov . --cov-report term-missing --cov-fail-under=100 --flake8"
+      - ./.env_test:/src/core/.env
+    environment:
+      DJANGO_SETTINGS_MODULE: core.settings
+    depends_on:
+      - db

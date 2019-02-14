@@ -1,0 +1,32 @@
+language: generic
+
+env:
+  - DOCKER_COMPOSE_VERSION=1.21.2
+
+addons:
+  apt:
+    packages:
+      - docker-ce
+
+before_install:
+  - sudo rm /usr/local/bin/docker-compose
+  - curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+  - chmod +x docker-compose
+  - sudo mv docker-compose /usr/local/bin
+  - docker-compose version
+
+stages:
+  - build
+  - test
+
+jobs:
+  include:
+    - stage: build
+      script:
+        - echo muslimbeibytuly/onekbtu-django:${TRAVIS_BRANCH}
+        - docker build -t muslimbeibytuly/onekbtu-django:${TRAVIS_BRANCH} .
+        - bash CI/push_to_docker_hub.sh
+    - stage: test
+      script:
+        - echo muslimbeibytuly/onekbtu-django:${TRAVIS_BRANCH}
+        - docker-compose -f CI/test.yml up --abort-on-container-exit
