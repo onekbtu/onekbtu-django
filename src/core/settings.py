@@ -8,7 +8,7 @@ from corsheaders.defaults import default_headers, default_methods
 env = environ.Env(
     DEBUG=(bool, True),
     SECRET_KEY=(str, 'ee9a4958-1881-4e2f-97bc-e347562ddb58'),
-    DATABASE_URL=(str, 'psql://onekbtuadmin:UFR9Uy7EQH54p2P3bZ76@db:5432/onekbtu')
+    DATABASE_URL=(str, 'psql://admin:pass@db:5432/onekbtu')
 )
 
 environ.Env.read_env()

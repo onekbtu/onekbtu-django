@@ -2,4 +2,4 @@ DEBUG=True
 
 SECRET_KEY=jH2R?rNt\b2xtvM=dbP*KB&_p~=6}J-F
 
-DATABASE_URL=psql://test_admin:test_pass@db:5432/test_onekbtu
+DATABASE_URL=psql://admin:pass@db:5432/onekbtu
