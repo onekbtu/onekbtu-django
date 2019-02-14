@@ -4,9 +4,9 @@ services:
   db:
     image: postgres:alpine
     environment:
-      POSTGRES_DB: onekbtu
-      POSTGRES_USER: onekbtu-admin
-      POSTGRES_PASSWORD: #dHQN[Q;Yr9c"m.gwuJ2p.@8sF&UCF56
+      POSTGRES_DB: test_onekbtu
+      POSTGRES_USER: test_admin
+      POSTGRES_PASSWORD: test_pass
 
   django:
     image: muslimbeibytuly/onekbtu-django:${TRAVIS_BRANCH}
