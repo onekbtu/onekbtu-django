@@ -25,8 +25,8 @@ jobs:
       script:
         - echo muslimbeibytuly/onekbtu-django:${TRAVIS_BRANCH}
         - docker build -t muslimbeibytuly/onekbtu-django:${TRAVIS_BRANCH} .
-        - bash CI/push_to_docker_hub.sh
+        - bash ci/push_to_docker_hub.sh
     - stage: test
       script:
         - echo muslimbeibytuly/onekbtu-django:${TRAVIS_BRANCH}
-        - docker-compose -f CI/test.yml up --abort-on-container-exit
+        - docker-compose -f ci/test.yml up --abort-on-container-exit

@@ -10,16 +10,10 @@ services:
       POSTGRES_USER: onekbtuadmin
       POSTGRES_PASSWORD: UFR9Uy7EQH54p2P3bZ76
 
-  vue:
-    image: muslimbeibytuly/onekbtu-vue:master
-    entrypoint: cp -r /frontend/dist/ /
-    volumes:
-      - vue:/dist
-
   django:
     image: muslimbeibytuly/onekbtu-django:master
     command: bash -c "python manage.py collectstatic --noinput && python manage.py migrate && gunicorn -c gunicorn.conf core.wsgi"
-      - ./.env_django:/src/core/.env
+      - ./.env_production:/src/core/.env
       - ./gunicorn.conf:/src/gunicorn.conf
       - ./logs:/logs
       - static:/src/staticfiles
@@ -43,7 +37,6 @@ services:
       - ./logs:/logs
       - static:/static
       - ./media:/media
-      - vue:/vue
     ports:
       - "80:80"
       - "443:443"
