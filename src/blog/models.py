@@ -8,8 +8,9 @@ class Post(models.Model):
 
     @property
     def rating(self) -> int:
-        qs = self.votes.all().aggregate(rating=models.Sum('vote_value'))
-        return qs['rating'] or 0
+        return Vote.objects.filter(post=self).aggregate(
+            rating=models.Sum('vote_value')
+        )['rating'] or 0
 
 
 class Vote(models.Model):
