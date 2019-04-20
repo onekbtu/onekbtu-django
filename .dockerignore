@@ -1,7 +1,0 @@
-.idea
-.vscode
-Dockerfile
-docker-compose.yml
-__pycache__
-.coverage
-.pytest_cache

@@ -1,12 +1,15 @@
 from types import MappingProxyType
 
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
+from django.test import Client
 from pytest import fixture
+from rest_framework.response import Response
 from rest_framework.test import APIClient
 
 
 @fixture
-def user():
+def user() -> User:
     return get_user_model().objects.create_user(
         username='muslimbeibytuly',
         email='muslimbeibytuly@gmail.com',
@@ -15,7 +18,7 @@ def user():
 
 
 @fixture
-def client_with_token(client):
+def client_with_token(client: Client) -> APIClient:
     get_user_model().objects.create_user(
         username='russiandoll',
         email='russiandoll@mail.ru',
@@ -23,14 +26,16 @@ def client_with_token(client):
     )
     data = MappingProxyType(
         {
-            'username': 'russiandoll',
-            'password': 'Qwerty123'
+            'username': 'russiandoll', 'password': 'Qwerty123'
         }
     )
-    response = client.post(path='/api/auth/login/', data=data, format='json')
+    response: Response = client.post(
+        path='/api/auth/login/',
+        data=data, format='json'
+    )
     token = response.data['token']
     authenticated_client = APIClient()
     authenticated_client.credentials(
-        HTTP_AUTHORIZATION='JWT {}'.format(token)
+        HTTP_AUTHORIZATION=f'JWT {token}'
     )
     return authenticated_client

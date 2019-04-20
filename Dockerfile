@@ -1,20 +1,17 @@
-FROM alpine
+FROM python:3.6.8-stretch
 
 ENV PYTHONUNBUFFERED=1
 
-RUN echo -e \
-    "http://nl.alpinelinux.org/alpine/v3.5/main\nhttp://nl.alpinelinux.org/alpine/v3.5/community" > \
-    /etc/apk/repositories
+#RUN echo -e \
+#    "http://nl.alpinelinux.org/alpine/v3.5/main\nhttp://nl.alpinelinux.org/alpine/v3.5/community" > \
+#    /etc/apk/repositories
 
-RUN apk update
+RUN apt-get update
 
-RUN apk add --no-cache \
-    linux-headers \
-    bash \
+RUN apt-get install -y bash \
     postgresql-client \
     gcc \
-    python3-dev \
-    postgresql-dev \
+    libpq-dev \
     musl-dev
 
 RUN rm -rf /src
